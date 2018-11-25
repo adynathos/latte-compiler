@@ -1,0 +1,2 @@
+#!/bin/sh
+scala -classpath "target/scala-2.10/Latek-assembly-1.0.jar" Latek.Main $1

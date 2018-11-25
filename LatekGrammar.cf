@@ -1,0 +1,118 @@
+-- programs ------------------------------------------------
+
+entrypoints LangProgram;
+
+-- LangProgram
+LangProgram_Definitions.	LangProgram ::= [LangTopDef] ;
+
+-- LangTopDef
+LangTopDef_Function.		LangTopDef ::= LangFuncDef ;
+LangTopDef_Class.			LangTopDef ::= LangClassDef ;
+separator nonempty 			LangTopDef "" ;
+
+-- LangClassDef
+LangClassDef_BaseClass.		LangClassDef ::= "class" Ident "{" [LangClassDefMember] "}" ;
+LangClassDef_SubClass.		LangClassDef ::= "class" Ident "extends" Ident "{" [LangClassDefMember] "}" ;
+
+LangClassDefMember_Method.	LangClassDefMember ::= LangFuncDef ;
+LangClassDefMember_Field.	LangClassDefMember ::= Ident Ident ";" ;
+separator nonempty 			LangClassDefMember "" ;
+
+
+-- LangFuncDef
+LangFuncDef_0.				LangFuncDef ::= Ident Ident "(" [LangArgument] ")" LangFuncBlock ;
+
+LangArgument_0.				LangArgument ::= Ident Ident;
+separator 					LangArgument "," ;
+
+-- statements ----------------------------------------------
+
+LangFuncBlock_0.			LangFuncBlock ::= "{" [LangStmt] "}" ;
+
+separator					LangStmt "" ;
+LangStmt_Empty.				LangStmt ::= ";" ;
+LangStmt_Value.				LangStmt ::= LangExp ";" ;
+LangStmt_Block.				LangStmt ::= LangFuncBlock ;
+LangStmt_Declaration.		LangStmt ::= Ident [LangVarDeclaration] ";" ;
+
+LangVarDeclaration_Init.	LangVarDeclaration ::= Ident ;
+LangVarDeclaration_NoInit.	LangVarDeclaration ::= Ident "=" LangExp ;
+separator nonempty			LangVarDeclaration "," ;
+
+LantStmt_Assign.			LangStmt ::= LangLValue "=" LangExp ";" ;
+LantStmt_AddOne.			LangStmt ::= LangLValue "++" ";" ;
+LantStmt_SubOne.			LangStmt ::= LangLValue "--" ";" ;
+
+LangStmt_Return.			LangStmt ::= "return" LangExp ";" ;
+LangStmt_ReturnNothing.		LangStmt ::= "return" ";" ;
+
+LangStmt_If.				LangStmt ::= "if" "(" LangExp ")" LangStmt ;
+LangStmt_IfElse.			LangStmt ::= "if" "(" LangExp ")" LangStmt "else" LangStmt;
+LangStmt_While.				LangStmt ::= "while" "(" LangExp ")" LangStmt ;
+
+
+
+-- Types ---------------------------------------------------
+
+-- LangType_Single.			LangType ::= Ident ;
+
+--internal LangType_Func.		LangType ::= LangType "(" [LangType] ")" ;
+--separator 					LangType "," ;
+
+-- Expressions ---------------------------------------------
+
+LangLValue_Variable.		LangLValue ::= Ident ;
+LangLValue_Member.			LangLValue ::= LangExp6 "." Ident ;
+LangLValue_Array.			LangLValue ::= LangExp6 "[" LangExp "]" ;
+
+LangExp_LitInt.				LangExp7 ::= Integer ;
+LangExp_LitString.			LangExp7 ::= String;
+LangExp_LitTrue.			LangExp7 ::= "true" ;
+LangExp_LitFalse.			LangExp7 ::= "false" ;
+LangExp_LitNull.			LangExp7 ::= "(" Ident ")" "null" ;
+
+LangExp_Variable.			LangExp7 ::= Ident ;
+LangExp_Member.				LangExp7 ::= LangExp6 "." Ident ;
+
+LangExp_Call.				LangExp7 ::= LangExp6 "(" [LangExp] ")" ;
+
+LangExp_New.				LangExp7 ::= "new" Ident ;
+
+LangExp_Negation.			LangExp5 ::= "-" LangExp6;
+LangExp_Not.				LangExp5 ::= "!" LangExp6;
+
+LangExp_Mul.				LangExp4 ::= LangExp4 LangOpMul LangExp5 ;
+LangExp_Add.				LangExp3 ::= LangExp3 LangOpAdd LangExp4 ;
+LangExp_Rel.				LangExp2 ::= LangExp2 LangOpRel LangExp3 ;
+
+LangExp_And.				LangExp1 ::= LangExp2 "&&" LangExp1 ;
+LangExp_Or.					LangExp ::= LangExp1 "||" LangExp ;
+
+coercions 					LangExp 7 ;
+separator 					LangExp "," ;
+
+
+-- operators -----------------------------------------------
+
+LangOpAdd_Add.				LangOpAdd ::= "+" ;
+LangOpAdd_Sub.				LangOpAdd ::= "-" ;
+
+LangOpMul_Mul.				LangOpMul ::= "*" ;
+LangOpMul_Div.				LangOpMul ::= "/" ;
+LangOpMul_Mod.				LangOpMul ::= "%" ;
+
+LangRel_LT.					LangOpRel ::= "<" ;
+LangRel_LE.					LangOpRel ::= "<=" ;
+LangRel_GT.					LangOpRel ::= ">" ;
+LangRel_GE.					LangOpRel ::= ">=" ;
+LangRel_EQ.					LangOpRel ::= "==" ;
+LangRel_NE.					LangOpRel ::= "!=" ;
+
+-- comments ------------------------------------------------
+
+comment						"#" ;
+
+comment						"//" ;
+
+comment						"/*" "*/" ;
+
